@@ -12,6 +12,7 @@ namespace Funda.Makelaar
     public class DataReader : IDataReader
     {
         private readonly ILogger _logger;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public DataReader(ILogger logger)
         {
             _logger = logger;
@@ -20,7 +21,7 @@ namespace Funda.Makelaar
         /// Get the list of houses registered on funda to buy
         /// </summary>
         /// <returns>Returns all the houses listedd on funda to buy</returns>
-        private async Task<List<House>> FetchAllListings(string basicUrl)
+        private async Task<List<House>> FetchAllListings(string basicUrl, CancellationToken cancellationToken)
         {
             var listings = new List<House>();
             Listing result = null;
@@ -31,10 +32,11 @@ namespace Funda.Makelaar
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = TimeSpan.FromMinutes(1);
                     do
                     {
                         string url = $"{basicUrl}/&page={currentPage}&pagesize=25";
-                        HttpResponseMessage response = await client.GetAsync(url);
+                        var response = client.GetAsync(url, cancellationToken).Result;
                         var stream = await response.Content.ReadAsStreamAsync();
 
                         //Throwing an exception if the request did not go through
@@ -43,7 +45,7 @@ namespace Funda.Makelaar
                             var content = await JsonStreamDeserializer.StreamToStringAsync(stream);
                             throw new ApiException
                             {
-                                StatusCode = (int)response.StatusCode,
+                                StatusCode = (int)response.StatusCode   ,
                                 Content = content
                             };
                         }
@@ -81,7 +83,7 @@ namespace Funda.Makelaar
             List<string> topMakelaars = new List<string>();
 
             //Fetching all the houses listed too buy in Amsterdam
-            var houseListings = await FetchAllListings(basicUrl);
+            var houseListings = await FetchAllListings(basicUrl, cancellationTokenSource.Token);
 
             //Grouping the list by makelaarId
             var topList = houseListings.GroupBy(x => x.MakelaarId).OrderByDescending(g => g.Count()).Take(number).ToList();
