@@ -12,10 +12,12 @@ namespace Funda.Makelaar
     public class DataReader : IDataReader
     {
         private readonly ILogger _logger;
+        private HttpClient _client;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        public DataReader(ILogger logger)
+        public DataReader(ILogger logger, HttpClient http)
         {
             _logger = logger;
+            _client = http;
         }
         /// <summary>
         /// Get the list of houses registered on funda to buy
@@ -28,15 +30,14 @@ namespace Funda.Makelaar
             int currentPage = 1, totalPages = 0;
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    client.Timeout = TimeSpan.FromMinutes(1);
+                    _client.DefaultRequestHeaders.Accept.Clear();
+                    _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     do
                     {
                         string url = $"{basicUrl}/&page={currentPage}&pagesize=25";
-                        var response = client.GetAsync(url, cancellationToken).Result;
+                        var request = new HttpRequestMessage(HttpMethod.Get, url);
+                        var response = _client.SendAsync(request, cancellationToken).Result;
+                        Thread.Sleep(TimeSpan.FromMilliseconds(600));
                         var stream = await response.Content.ReadAsStreamAsync();
 
                         //Throwing an exception if the request did not go through
@@ -45,7 +46,7 @@ namespace Funda.Makelaar
                             var content = await JsonStreamDeserializer.StreamToStringAsync(stream);
                             throw new ApiException
                             {
-                                StatusCode = (int)response.StatusCode   ,
+                                StatusCode = (int)response.StatusCode,
                                 Content = content
                             };
                         }
@@ -63,7 +64,10 @@ namespace Funda.Makelaar
                         //Incrementing the page count to fetch the next page
                         currentPage++;
                     } while (totalPages >= currentPage);
-                }
+            }
+            catch(OperationCanceledException ex)
+            {
+                _logger.Error("Task was cancelled");
             }
             catch (Exception ex)
             {
@@ -97,7 +101,8 @@ namespace Funda.Makelaar
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _logger.Dispose();
+            _client.Dispose();
         }
     }
 }

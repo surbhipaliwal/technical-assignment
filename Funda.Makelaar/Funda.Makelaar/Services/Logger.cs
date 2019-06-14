@@ -15,6 +15,11 @@ namespace Funda.Makelaar
             Log = log4net.LogManager.GetLogger(typeof(Logger));
         }
 
+        public void Error(object msg)
+        {
+            Log.Error(msg);
+        }
+
         public void Error(Exception ex)
         {
             Log.Error(ex.Message, ex);

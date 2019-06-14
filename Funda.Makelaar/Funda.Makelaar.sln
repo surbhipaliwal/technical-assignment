@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Makelaar", "Funda.Makelaar\Funda.Makelaar.csproj", "{DE750C98-44D4-479D-A166-D7B9F0878F53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funda.Makelaar.Tests", "Funda.Makelaar.Tests\Funda.Makelaar.Tests.csproj", "{D98E5775-09FB-4BB8-B47C-969F2BC0E609}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DE750C98-44D4-479D-A166-D7B9F0878F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE750C98-44D4-479D-A166-D7B9F0878F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE750C98-44D4-479D-A166-D7B9F0878F53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D98E5775-09FB-4BB8-B47C-969F2BC0E609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98E5775-09FB-4BB8-B47C-969F2BC0E609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98E5775-09FB-4BB8-B47C-969F2BC0E609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D98E5775-09FB-4BB8-B47C-969F2BC0E609}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

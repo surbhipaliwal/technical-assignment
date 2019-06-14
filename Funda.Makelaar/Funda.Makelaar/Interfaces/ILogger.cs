@@ -7,5 +7,6 @@ namespace Funda.Makelaar
         void Error(Exception ex);
 
         void Info(object msg);
+        void Error(object msg);
     }
 }
