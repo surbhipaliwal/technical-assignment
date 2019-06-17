@@ -11,13 +11,13 @@ namespace Funda.Makelaar
 {
     public class DataReader : IDataReader
     {
-        private readonly ILogger _logger;
         private HttpClient _client;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        public DataReader(ILogger logger, HttpClient http)
+        public DataReader(HttpClient http)
         {
-            _logger = logger;
             _client = http;
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         /// <summary>
         /// Get the list of houses registered on funda to buy
@@ -28,9 +28,6 @@ namespace Funda.Makelaar
             var listings = new List<House>();
             Listing result = null;
             int currentPage = 1, totalPages = 0;
-           
-                    _client.DefaultRequestHeaders.Accept.Clear();
-                    _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     do
                     {
                         string url = $"{basicUrl}/&page={currentPage}&pagesize=25";
@@ -92,7 +89,6 @@ namespace Funda.Makelaar
 
         public void Dispose()
         {
-            _logger.Dispose();
             _client.Dispose();
         }
     }

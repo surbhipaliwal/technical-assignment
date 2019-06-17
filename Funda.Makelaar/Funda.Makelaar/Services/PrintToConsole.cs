@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Funda.Makelaar
 {
@@ -31,7 +29,6 @@ namespace Funda.Makelaar
             {
                 _logger.Info(makelaar);
             }
-            Console.ReadKey();
         }
 
         /// <summary>
@@ -45,7 +42,6 @@ namespace Funda.Makelaar
             {
                 _logger.Info(makelaar);
             }
-            Console.ReadKey();
         }
     }
 }

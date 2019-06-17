@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Funda.Makelaar
 {
     public interface IMakelaar : IDisposable
     {
-        void GetTopMakelaar(int number);
+        Task<List<string>> GetTopMakelaar(int number);
 
-        void GetTopMakelaarWithTuin(int number);
+        Task<List<string>> GetTopMakelaarWithTuin(int number);
     }
 }
