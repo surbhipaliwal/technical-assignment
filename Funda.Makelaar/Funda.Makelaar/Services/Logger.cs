@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Funda.Makelaar
-{ 
+{
     public class Logger : ILogger
     {
         private static log4net.ILog Log { get; set; }

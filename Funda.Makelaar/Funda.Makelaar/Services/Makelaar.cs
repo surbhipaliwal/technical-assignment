@@ -1,12 +1,4 @@
-﻿using Funda.Makelaar.Entities;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace Funda.Makelaar
+﻿namespace Funda.Makelaar
 {
     public class Makelaar : IMakelaar
     {

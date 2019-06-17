@@ -75,17 +75,18 @@ namespace Funda.Makelaar
         public async Task<List<string>> GetTopMakelaarsFromList(int number, string basicUrl)
         {
             List<string> topMakelaars = new List<string>();
+            if(number > 0)
+            {
+                //Fetching all the houses listed too buy in Amsterdam
+                var houseListings = await FetchAllListings(basicUrl, cancellationTokenSource.Token);
 
-            //Fetching all the houses listed too buy in Amsterdam
-            var houseListings = await FetchAllListings(basicUrl, cancellationTokenSource.Token);
+                //Grouping the list by makelaarId
+                var topList = houseListings.GroupBy(x => x.MakelaarId).OrderByDescending(g => g.Count()).Take(number).ToList();
 
-            //Grouping the list by makelaarId
-            var topList = houseListings.GroupBy(x => x.MakelaarId).OrderByDescending(g => g.Count()).Take(number).ToList();
-
-            //Getting the names of top makelaars with maximum listing
-            foreach (var makelaar in topList)
-                topMakelaars.Add(makelaar.First().MakelaarNaam);
-
+                //Getting the names of top makelaars with maximum listing
+                foreach (var makelaar in topList)
+                    topMakelaars.Add(makelaar.First().MakelaarNaam);
+            }
             return topMakelaars;
         }
 
