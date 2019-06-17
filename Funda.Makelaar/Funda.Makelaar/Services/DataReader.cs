@@ -28,8 +28,7 @@ namespace Funda.Makelaar
             var listings = new List<House>();
             Listing result = null;
             int currentPage = 1, totalPages = 0;
-            try
-            {
+           
                     _client.DefaultRequestHeaders.Accept.Clear();
                     _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     do
@@ -64,16 +63,7 @@ namespace Funda.Makelaar
                         //Incrementing the page count to fetch the next page
                         currentPage++;
                     } while (totalPages >= currentPage);
-            }
-            catch(OperationCanceledException ex)
-            {
-                _logger.Error("Task was cancelled");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-                Console.ReadKey();
-            }
+           
             return listings;
         }
 

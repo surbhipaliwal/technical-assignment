@@ -1,11 +1,13 @@
 using Moq;
 using Moq.Protected;
 using Ninject;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+
 
 namespace Funda.Makelaar.Tests
 {
@@ -16,30 +18,15 @@ namespace Funda.Makelaar.Tests
         public ServiceTests()
         {
             Kernel = new StandardKernel();
+            Kernel.Load(new Bindings());
             Kernel.Rebind<ILogger>().To<Logger>();
             _dataReader = Kernel.Get<IDataReader>();
         }
 
         [Fact]
-        public void GetObjects_With401Response_ShouldThrowUnAuthorizedException()
+        public async void GetObjects_WithWrongUri_ShouldThrowInvalidOperationException()
         {
-            var unauthorizedResponseHttpHandlerMock = new Mock<HttpMessageHandler>();
-
-            unauthorizedResponseHttpHandlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                "SendAsync",
-                ItExpr.IsAny<HttpResponseMessage>(),
-                ItExpr.IsAny<CancellationToken>()
-                ).ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = HttpStatusCode.Unauthorized
-                });
-
-            var client = new HttpClient(unauthorizedResponseHttpHandlerMock.Object);
-
-            
-            
-           // var test = _dataReader.
+            await Assert.ThrowsAsync<InvalidOperationException>(() => _dataReader.GetTopMakelaarsFromList(10, ""));
         }
     }
 }
